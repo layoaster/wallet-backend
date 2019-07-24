@@ -1,0 +1,5 @@
+-r ./requirements.txt
+black==19.3b0
+flake8==3.7.8
+flake8-import-order==0.18.1
+mypy==0.720

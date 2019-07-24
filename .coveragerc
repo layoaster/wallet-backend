@@ -1,0 +1,14 @@
+[run]
+parallel = True
+branch = True
+concurrency = multiprocessing
+source =
+    wallet_api/
+
+omit =
+    # Tests source code
+    */tests/*
+
+[report]
+omit =
+    wallet_api/*/__init__.py
