@@ -1,0 +1,70 @@
+# Wallets Manager backend [development]
+version: "3.7"
+
+services:
+
+  wallet-backend:
+    build:
+      context: .
+      target: wallet-backend-dev
+    image: wallet-backend-dev
+    environment:
+      # Flask config
+      - FLASK_ENV=development
+      - FLASK_SECRET_KEY
+      # DB - SQLAlchemy config
+      - PSQL_CLIENT_HOST
+      - PSQL_CLIENT_PASSWORD
+    volumes:
+      - type: bind
+        source: ./
+        target: /code
+    ports:
+      - "5000:5000"
+    networks:
+      - wallet_backend
+    depends_on:
+      - wallet-backend-db
+
+  test:
+    image: wallet-backend-dev:latest
+    environment:
+      - FLASK_ENV=development
+      - FLASK_SECRET_KEY
+      - FLASK_SKIP_DOTENV=1
+      # DB - SQLAlchemy config
+      - PSQL_CLIENT_HOST
+      - PSQL_CLIENT_PASSWORD
+    entrypoint: pytest
+    volumes:
+      - type: bind
+        source: ./
+        target: /code
+    networks:
+      - wallet_backend
+    depends_on:
+      - wallet-backend-db
+
+  wallet-backend-db:
+    build:
+      context: ./etc/docker_imgs/postgresql
+    image: wallet-backend-db
+    environment:
+      - POSTGRES_USER=${PSQL_CLIENT_USERNAME}
+      - POSTGRES_PASSWORD=${PSQL_CLIENT_PASSWORD}
+      - POSTGRES_DB=${PSQL_CLIENT_DATABASE}
+    volumes:
+      - type: volume
+        source: wallet-backend-db-data
+        target: /var/lib/postgresql/data
+    ports:
+      # To allow external DB clients
+      - "5432:5432"
+    networks:
+      - wallet_backend
+
+volumes:
+  wallet-backend-db-data:
+
+networks:
+  wallet_backend:

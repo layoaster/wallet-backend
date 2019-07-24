@@ -9,10 +9,35 @@ BLACK_CONFIG = .black
 
 help:
 	@echo "Please use \`make <target>\` where <target> is one of:"
-	@echo "  check      to check code's quality & style [flake8 and black]."
-	@echo "  format     to run black to format code."
-	@echo "  clean      remove temporary/cache/unnecesary files."
+	@echo "  build      Builds app containers"
+	@echo "  start      Gets app containers up & running"
+	@echo "  stop       Stop and removes app containers"
+	@echo "  logs       Fetches active containers logs"
+	@echo "  test       Runs the app suite of tests"
+	@echo "  check      Checks code's quality & style [flake8 and black]"
+	@echo "  format     Runs 'black' to format code"
+	@echo "  clean      remove temporary/cache/unnecesary files"
 .PHONY: help
+
+build:
+	@docker-compose build
+.PHONY: build
+
+start:
+	@docker-compose up -d wallet-backend
+.PHONY: start
+
+stop:
+	@docker-compose down
+.PHONY: stop
+
+logs:
+	@docker-compose logs --tail=25
+.PHONY: logs
+
+test:
+	@docker-compose run --rm test
+.PHONY: test
 
 check:
 	@flake8 && \
