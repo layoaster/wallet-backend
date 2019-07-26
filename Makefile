@@ -14,6 +14,7 @@ help:
 	@echo "  stop       Stop and removes app containers"
 	@echo "  logs       Fetches active containers logs"
 	@echo "  test       Runs the app suite of tests"
+	@echo "  migrate    Applies database migrations"
 	@echo "  check      Checks code's quality & style [flake8 and black]"
 	@echo "  format     Runs 'black' to format code"
 	@echo "  clean      remove temporary/cache/unnecesary files"
@@ -38,6 +39,10 @@ logs:
 test:
 	@docker-compose run --rm test
 .PHONY: test
+
+migrate:
+	@docker-compose run --rm manage db upgrade
+.PHONY: migrate
 
 check:
 	@flake8 && \

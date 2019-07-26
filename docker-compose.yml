@@ -26,6 +26,26 @@ services:
     depends_on:
       - wallet-backend-db
 
+  manage:
+    image: wallet-backend-dev:latest
+    environment:
+      - FLASK_APP=wallet_api/manage
+      - FLASK_ENV=production
+      - FLASK_SECRET_KEY
+      - FLASK_SKIP_DOTENV=1
+      # DB - SQLAlchemy config
+      - PSQL_CLIENT_HOST
+      - PSQL_CLIENT_PASSWORD
+    entrypoint: flask
+    volumes:
+      - type: bind
+        source: ./
+        target: /code
+    networks:
+      - wallet_backend
+    depends_on:
+      - wallet-backend-db
+
   test:
     image: wallet-backend-dev:latest
     environment:
