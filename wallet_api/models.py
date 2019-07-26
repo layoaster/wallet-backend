@@ -3,6 +3,9 @@ Data model definitions.
 """
 import enum
 
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.schema import CreateColumn
+
 from wallet_api import db
 
 
@@ -55,3 +58,17 @@ class TransactionLog(db.Model):
     new_balance = db.Column(db.DECIMAL(scale=2), nullable=False)
     #: Transaction date-time.
     timestamp = db.Column(db.DateTime, nullable=False)
+
+
+# ---- SQLAlchemy custom compilation rules ---- #
+
+@compiles(CreateColumn, "postgresql")
+def use_identity(element, compiler, **kw):
+    """
+    Custom compilation that replaces SERIAL columns with IDENTITY columns
+    (only) in PSQL. Needed until SQLAlchemy adds native support for IDENTITY.
+    https://docs.sqlalchemy.org/en/13/dialects/postgresql.html#sequences-serial-identity
+    """
+    text = compiler.visit_create_column(element, **kw)
+    text = text.replace("SERIAL", "INT GENERATED ALWAYS AS IDENTITY")
+    return text
