@@ -4,7 +4,7 @@ App routes definitions.
 from flask import Blueprint
 from flask_restful import Api
 
-from wallet_api.resources.user import UserBalance, UserTransfer
+from wallet_api.resources.user import UserBalance, UserResource, UserTransfer
 
 
 # Application's blueprint
@@ -15,5 +15,6 @@ api = Api(app_bp)
 
 
 # User routes
+api.add_resource(UserResource, "/user", endpoint="user")
 api.add_resource(UserBalance, "/user/<int:user_id>/balance", endpoint="user_balance")
 api.add_resource(UserTransfer, "/user/<int:user_id>/transfer", endpoint="user_transfer")

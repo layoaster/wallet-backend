@@ -33,8 +33,14 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     #: User fullname.
     name = db.Column(db.String(50), nullable=False)
+    #: User email
+    email = db.Column(db.String(254), nullable=False, unique=True, index=True)
     #: User transactions.
     transactions = db.relationship("TransactionLog", order_by="TransactionLog.timestamp", lazy=True)
+
+    def __repr__(self) -> str:
+        """Object string representation."""
+        return f"<User(id='{self.id}', name='{self.name}', email='{self.email}')>"
 
 
 class TransactionLog(db.Model):
@@ -59,9 +65,19 @@ class TransactionLog(db.Model):
     #: Transaction date-time.
     timestamp = db.Column(db.DateTime, nullable=False)
 
+    def __repr__(self) -> str:
+        """Object string representation."""
+        return (
+            f"<Transaction(user_id='{self.user_id}', "
+            f"=trans_type'{self.trans_type}', "
+            f"amount='{self.amount}', "
+            f"opening_balance='{self.opening_balance}', "
+            f"new_balance='{self.new_balance}', "
+            f"timestamp='{self.timestamp}')>"
+        )
+
 
 # ---- SQLAlchemy custom compilation rules ---- #
-
 @compiles(CreateColumn, "postgresql")
 def use_identity(element, compiler, **kw):
     """
