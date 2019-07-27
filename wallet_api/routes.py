@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, Response
 from flask_restful import Api
 
 from wallet_api.common.exception import BaseApiException
+from wallet_api.resources.health import HealthLive
 from wallet_api.resources.user import UserBalance, UserResource, UserTransfer
 
 
@@ -19,6 +20,8 @@ api = Api(app_bp)
 api.add_resource(UserResource, "/user", endpoint="user")
 api.add_resource(UserBalance, "/user/<int:user_id>/balance", endpoint="user_balance")
 api.add_resource(UserTransfer, "/user/<int:user_id>/transfer", endpoint="user_transfer")
+# ----- Health probes routes ----- #
+api.add_resource(HealthLive, "/health/live", endpoint="health_live")
 
 
 # ----- App exceptions handler ----- #
