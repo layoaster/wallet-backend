@@ -2,6 +2,7 @@
 User's set of endpoints.
 """
 from datetime import datetime
+from decimal import Decimal
 
 from flask import jsonify, request, Response
 from flask_restful import Resource
@@ -52,7 +53,7 @@ class UserResource(Resource):
                 user_id=new_user.id,
                 trans_type=TransactionType.DEPOSIT,
                 amount=req_data["init_balance"],
-                opening_balance=req_data["init_balance"],
+                opening_balance=Decimal("0.0"),
                 new_balance=req_data["init_balance"],
                 timestamp=datetime.utcnow(),
             )

@@ -2,7 +2,7 @@ import logging
 import os
 from functools import wraps
 
-from flask import Flask
+from flask import current_app, Flask
 from flask_sqlalchemy import SQLAlchemy
 
 from wallet_api.config import FlaskAppConfig as flask_conf
@@ -66,7 +66,8 @@ def db_isolation_level(level: str):
     def decorator(view):
         @wraps(view)
         def view_wrapper(*args, **kwargs):
-            db.session.connection(execution_options={"isolation_level": level})
+            if not current_app.config["TESTING"]:
+                db.session.connection(execution_options={"isolation_level": level})
             return view(*args, **kwargs)
 
         return view_wrapper

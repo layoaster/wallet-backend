@@ -1,7 +1,7 @@
 """empty message
 
 Revision ID: ad10578438b5
-Revises: 
+Revises:
 Create Date: 2019-07-26 18:36:21.107807
 
 """
@@ -45,3 +45,6 @@ def downgrade():
     op.drop_index(op.f('ix_user_email'), table_name='user')
     op.drop_table('user')
     # ### end Alembic commands ###
+
+    # Remove enum type
+    op.execute("DROP TYPE IF EXISTS transactiontype")
