@@ -8,7 +8,7 @@ from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm.exc import NoResultFound
 
-from wallet_api import db
+from wallet_api import db, db_isolation_level
 from wallet_api.common import exception
 from wallet_api.common.serializers import (
     UserBalanceOutputSchema,
@@ -101,6 +101,7 @@ class UserTransfer(Resource):
     API endpoint: User's money transfer.
     """
 
+    @db_isolation_level("SERIALIZABLE")
     def post(self, user_id: int) -> Response:
         """
         Transfer money between users.
