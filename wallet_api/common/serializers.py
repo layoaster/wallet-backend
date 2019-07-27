@@ -4,6 +4,7 @@ Set of serializers for each API endpoint.
 from decimal import Context, Decimal, Inexact
 
 from marshmallow import fields, Schema, ValidationError
+from marshmallow.validate import Range
 
 
 # Max number of decimal digits allowed
@@ -72,7 +73,9 @@ class UserTransferInputSchema(Schema):
     #: Transfer recipient user ID.
     toUserId = fields.Int(required=True, allow_none=False)
     #: Amount of money to tranfer.
-    amount = fields.Decimal(required=True, allow_none=False, validate=decimal_places)
+    amount = fields.Decimal(
+        required=True, allow_none=False, validate=(decimal_places, Range(min=0))
+    )
 
 
 class UserTransferOutputSchema(Schema):
