@@ -1,5 +1,6 @@
 import logging
 import os
+from functools import wraps
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -50,3 +51,24 @@ def create_app(test: bool = False) -> Flask:
     app.register_blueprint(app_bp)
 
     return app
+
+
+# ---- Flask views decorator ---- #
+def db_isolation_level(level: str):
+    """
+    Flask view decorator to set SQLAlchemy transaction isolation level.
+    https://docs.sqlalchemy.org/en/13/dialects/postgresql.html#postgresql-isolation-level
+
+    :param level: SQLAlchemy driver-specific isolation level.
+    :return: decorated view funcion.
+    """
+
+    def decorator(view):
+        @wraps(view)
+        def view_wrapper(*args, **kwargs):
+            db.session.connection(execution_options={"isolation_level": level})
+            return view(*args, **kwargs)
+
+        return view_wrapper
+
+    return decorator
