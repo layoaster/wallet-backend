@@ -105,7 +105,7 @@ Code | Description
 403 | Insufficient funds / Invalid user ID
 
 
-## TODO:
+## TODO
 
 1. Improve tests coverage.
 2. Write a proper API documentation.
